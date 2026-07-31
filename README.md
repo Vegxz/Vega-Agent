@@ -13,7 +13,7 @@
 [![Android](https://img.shields.io/badge/Android-6.0%2B-3DDC84?style=for-the-badge&logo=android&logoColor=white&labelColor=1B1F23)](https://www.android.com/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white&labelColor=1B1F23)](https://kotlinlang.org/)
 [![Local First](https://img.shields.io/badge/Local--First-00C853?style=for-the-badge&logo=shieldsdotio&logoColor=white&labelColor=1B1F23)](#fa-security)
-[![License Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-2962FF?style=for-the-badge&logo=apache&logoColor=white&labelColor=1B1F23)](LICENSE)
+[![License AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-2962FF?style=for-the-badge&logo=gnu&logoColor=white&labelColor=1B1F23)](LICENSE)
 
 <br>
 
@@ -301,9 +301,9 @@ chmod +x mkapk.sh runtests.sh
 
 ### 📄 مجوز
 
-[![License Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-2962FF?style=flat-square&logo=apache&logoColor=white&labelColor=1B1F23)](LICENSE)
+[![License AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-2962FF?style=flat-square&logo=gnu&logoColor=white&labelColor=1B1F23)](LICENSE)
 
-این پروژه تحت مجوز [Apache License 2.0](LICENSE) منتشر شده است.
+این پروژه تحت مجوز [AGPL-3.0](LICENSE) منتشر شده است.
 
 <p align="left"><a href="#toc">⬆️ بازگشت به فهرست مطالب</a></p>
 
@@ -543,9 +543,9 @@ When reporting an issue, consider including:
 
 ### 📄 License
 
-[![License Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-2962FF?style=flat-square&logo=apache&logoColor=white&labelColor=1B1F23)](LICENSE)
+[![License AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-2962FF?style=flat-square&logo=gnu&logoColor=white&labelColor=1B1F23)](LICENSE)
 
-This project is licensed under the [Apache License 2.0](LICENSE).
+This project is licensed under the [GNU AGPL v3.0](LICENSE).
 
 <p align="left"><a href="#toc">⬆️ Back to table of contents</a></p>
 
