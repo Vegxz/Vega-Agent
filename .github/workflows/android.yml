@@ -1,0 +1,130 @@
+name: build
+
+# Produces a SIGNED, installable APK as a downloadable artifact, plus runs the
+# full verification stack. Push this repo to GitHub and the APK appears under
+# Actions → the run → Artifacts. No local Android SDK needed.
+#
+# Signing key: this project ships NO signing key (the release key is private and
+# lives only with the maintainer). To produce an OFFICIAL, release-signed APK,
+# add these repository secrets — the workflow decodes and signs with them:
+#   VEPRO_KEYSTORE_BASE64   base64 -w0 vepro-release-private.jks
+#   VEPRO_KEYSTORE_PASSWORD
+#   VEPRO_KEY_ALIAS         (optional; defaults to "vepro")
+# Without those secrets (forks / PRs) the build still runs but is signed with a
+# throwaway CI key and is NOT an official release — do not distribute it.
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: verify (no SDK needed)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Source contracts
+        run: python3 tests/source_regressions.py
+
+      # Cheap, and they fail on exactly the two things the compile step reports
+      # only as a wall of cascading errors: a symbol that no longer resolves,
+      # and a LayoutParams class that does not match its parent (which the
+      # compiler does not report at all).
+      - name: Static cross-reference
+        run: |
+          python3 tools/check_ui.py
+          python3 tools/check_layoutparams.py
+
+      - name: Compile the port with generated Android stubs
+        run: tools/build-offline.sh
+
+      - name: Static parity verifier
+        run: python3 tools/verify.py || true
+
+  apk:
+    name: signed APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-35 build-tools;35.0.1'
+
+      - name: Install Kotlin compiler
+        run: |
+          set -euo pipefail
+          KOTLIN_VERSION=2.0.21
+          curl -sSLo /tmp/kotlin.zip \
+            "https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION}/kotlin-compiler-${KOTLIN_VERSION}.zip"
+          unzip -q /tmp/kotlin.zip -d "$HOME"
+          echo "KOTLIN_HOME=$HOME/kotlinc" >> "$GITHUB_ENV"
+
+      - name: Resolve signing key
+        env:
+          KS_B64: ${{ secrets.VEPRO_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.VEPRO_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.VEPRO_KEY_ALIAS }}
+        run: |
+          set -euo pipefail
+          if [[ -n "${KS_B64:-}" ]]; then
+            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
+            echo "::add-mask::$KS_PASS"
+            echo "VEPRO_KEYSTORE_PATH=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+            echo "VEPRO_KEYSTORE_PASSWORD=$KS_PASS" >> "$GITHUB_ENV"
+            echo "VEPRO_KEY_ALIAS=${KS_ALIAS:-vepro}" >> "$GITHUB_ENV"
+            echo "OFFICIAL_RELEASE=1" >> "$GITHUB_ENV"
+            echo "Signing with the private release key from repository secrets."
+          else
+            # No release secret configured (fork / PR, or the maintainer has not
+            # added the secrets yet). Generate a THROWAWAY key so the build still
+            # completes and produces an installable test APK. This APK is NOT an
+            # official release and must not be distributed as one.
+            EPHEMERAL="$RUNNER_TEMP/ci-ephemeral.jks"
+            keytool -genkeypair -keystore "$EPHEMERAL" -storetype PKCS12 \
+              -storepass ephemeral -keypass ephemeral -alias vepro \
+              -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -validity 3650 \
+              -dname "CN=Vega CI (UNOFFICIAL), OU=CI, O=Vega, C=IR"
+            echo "VEPRO_KEYSTORE_PATH=$EPHEMERAL" >> "$GITHUB_ENV"
+            echo "VEPRO_KEYSTORE_PASSWORD=ephemeral" >> "$GITHUB_ENV"
+            echo "VEPRO_KEY_ALIAS=vepro" >> "$GITHUB_ENV"
+            echo "OFFICIAL_RELEASE=0" >> "$GITHUB_ENV"
+            echo "::warning::No VEPRO_KEYSTORE_BASE64 secret set — built with a throwaway CI key. NOT an official release."
+          fi
+
+      - name: Build + sign APK
+        run: |
+          set -euo pipefail
+          export ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          # The displayed version is "1". versionCode uses the monotonic CI run
+          # number, offset past the last hand-built release (14) so CI can never
+          # emit a lower code than an APK already installed.
+          ./mkapk.sh "1" "$(( 100 + GITHUB_RUN_NUMBER ))" Vega-v1.apk
+
+      - name: Show the signature that was applied
+        run: |
+          BT="$(ls -d "$ANDROID_SDK_ROOT"/build-tools/* | sort -V | tail -1)"
+          "$BT/apksigner" verify --verbose --print-certs Vega-v1.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Vega-v1-signed-apk
+          path: Vega-v1.apk
+          if-no-files-found: error

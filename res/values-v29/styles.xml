@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- API 29+: opt out of OS/OEM automatic "force dark" color inversion.
+         The app manages its own light/dark palettes, so any auto-inversion
+         (notably MIUI/HyperOS & One UI) mangles text into grey/washed tones.
+         Both themes need the opt-out: force-dark applied to the LIGHT theme is
+         exactly how a light-mode screen ends up half-inverted on those OEMs.
+
+         Colours here are the Vega monochrome palette and must stay in step with
+         Theme.kt — these are the values the PLATFORM draws with (caret,
+         selection handles and highlight, ActionMode bar, overscroll glow,
+         Toast and Dialog chrome), so a mismatch shows up as a stray coloured
+         cursor on an otherwise greyscale screen. Every value below is a pure
+         grey or a black/white alpha wash. -->
+    <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:windowBackground">#FF0D0D0D</item>
+        <item name="android:colorAccent">#FFF7F7F7</item>
+        <item name="android:colorControlActivated">#FFF7F7F7</item>
+        <item name="android:colorControlHighlight">#33FFFFFF</item>
+        <item name="android:textColorHighlight">#4DFFFFFF</item>
+        <item name="android:statusBarColor">#FF0D0D0D</item>
+        <item name="android:navigationBarColor">#FF0D0D0D</item>
+    </style>
+
+    <style name="AppThemeLight" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:windowBackground">#FFF9F9F9</item>
+        <item name="android:colorAccent">#FF0D0D0D</item>
+        <item name="android:colorControlActivated">#FF0D0D0D</item>
+        <item name="android:colorControlHighlight">#1F000000</item>
+        <item name="android:textColorHighlight">#33000000</item>
+        <item name="android:statusBarColor">#FFF9F9F9</item>
+        <item name="android:navigationBarColor">#FFF9F9F9</item>
+    </style>
+</resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.vepro.code">
+    <!-- Android 6.0. Stated here so the manifest is self-describing rather than
+         relying on whichever build path produced the APK: ./mkapk.sh passes 23 to
+         aapt2, d8 and apksigner, and build.gradle.kts sets minSdk = 23. Those four
+         used to disagree (the signer said 23 while the dexer said 24), which is
+         how API-24-only calls shipped in an APK that installs on Android 6. -->
+    <uses-sdk android:minSdkVersion="23"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Storage, across the three eras this app now spans.
+
+         API 23-28: READ/WRITE_EXTERNAL_STORAGE are ordinary runtime permissions
+         and the File API reaches all of shared storage. Both must therefore be
+         declared with no lower bound — a maxSdkVersion is a ceiling, never a floor,
+         so lowering minSdk to 23 needs no change here.
+
+         API 29: scoped storage arrives but is opt-out; requestLegacyExternalStorage
+         below keeps the pre-scoped File behaviour, and WRITE_EXTERNAL_STORAGE is
+         still honoured — hence maxSdkVersion 29 on it, since from API 30 the
+         permission has no effect at all.
+
+         API 30+: MANAGE_EXTERNAL_STORAGE (All files access) is the only route, and
+         it is deliberately unbounded. API 33+ replaced READ_EXTERNAL_STORAGE with
+         the granular media permissions, hence maxSdkVersion 32 on it. -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <!-- Package visibility for App.autostartIntents. From API 30 a package the app
+         has not declared is invisible to PackageManager.resolveActivity, so without
+         this the OEM autostart screens would look "not installed" on exactly the
+         Android versions where the vendor kill-switches bite hardest, and the
+         helper would silently fall through to the generic Doze intent. Ignored
+         below API 30. These are the packages listed in App.OEM_AUTOSTART. -->
+    <queries>
+        <package android:name="com.miui.securitycenter"/>
+        <package android:name="com.huawei.systemmanager"/>
+        <package android:name="com.coloros.safecenter"/>
+        <package android:name="com.oppo.safe"/>
+        <package android:name="com.oneplus.security"/>
+        <package android:name="com.vivo.permissionmanager"/>
+        <package android:name="com.iqoo.secure"/>
+        <package android:name="com.samsung.android.lool"/>
+    </queries>
+    <!-- requestLegacyExternalStorage is read on API 29 ONLY (ignored below it,
+         ignored from API 30 on). It is what keeps java.io.File working against
+         shared storage on Android 10, which is otherwise the one release between
+         the 23-28 runtime-permission model and the 30+ All-files model where the
+         file browser would silently see an empty tree. -->
+    <application android:allowBackup="false" android:hardwareAccelerated="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:name=".App" android:requestLegacyExternalStorage="true" android:resizeableActivity="true" android:supportsRtl="true" android:theme="@style/AppTheme">
+        <activity android:configChanges="keyboardHidden|keyboard|navigation|orientation|screenSize|screenLayout|smallestScreenSize|density|uiMode" android:exported="true" android:launchMode="singleTop" android:name=".MainActivity" android:theme="@style/AppTheme" android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:configChanges="keyboardHidden|keyboard|navigation|orientation|screenSize|screenLayout|smallestScreenSize|density|uiMode" android:exported="false" android:name=".SettingsActivity" android:theme="@style/AppTheme" android:windowSoftInputMode="adjustResize"/>
+        <service android:exported="false" android:foregroundServiceType="dataSync" android:name=".AgentService"/>
+    </application>
+</manifest>

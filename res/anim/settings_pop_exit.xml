@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings leaving: drops back down and fades, faster than it arrived —
+     dismissal should feel lighter than presentation. -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:interpolator/accelerate_quint">
+    <translate
+        android:fromYDelta="0"
+        android:toYDelta="6%p"
+        android:duration="220" />
+    <alpha
+        android:fromAlpha="1.0"
+        android:toAlpha="0.0"
+        android:duration="200"
+        android:startOffset="20" />
+</set>

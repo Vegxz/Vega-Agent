@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <public type="mipmap" name="ic_launcher" id="0x7f010000" />
+    <public type="mipmap" name="ic_launcher_bg" id="0x7f010001" />
+    <public type="mipmap" name="ic_launcher_fg" id="0x7f010002" />
+    <public type="mipmap" name="ic_launcher_mono" id="0x7f010003" />
+    <public type="mipmap" name="ic_stat_vepro" id="0x7f010004" />
+    <public type="string" name="app_name" id="0x7f020000" />
+    <public type="style" name="AppTheme" id="0x7f030000" />
+    <public type="style" name="AppThemeLight" id="0x7f030001" />
+    <public type="anim" name="settings_enter" id="0x7f040000" />
+    <public type="anim" name="settings_exit" id="0x7f040001" />
+    <public type="anim" name="settings_pop_enter" id="0x7f040002" />
+    <public type="anim" name="settings_pop_exit" id="0x7f040003" />
+</resources>

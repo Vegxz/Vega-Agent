@@ -1,0 +1,6 @@
+Vega — Third-party assets
+=========================
+• Vazirmatn font — SIL Open Font License 1.1 (rastikerdar/vazirmatn)
+• JetBrains Mono font — SIL Open Font License 1.1 (JetBrains)
+• UI icons — original vector paths in the Feather style (MIT-compatible), redrawn in-app.
+All bundled fonts are used under the SIL OFL 1.1; their license texts are included in this folder.

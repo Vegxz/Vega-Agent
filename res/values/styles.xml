@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The app draws every pixel of its own UI, but the PLATFORM still draws a
+         handful of things from the activity theme: the text cursor and the
+         selection handles, the text-selection highlight, the contextual
+         ActionMode bar, the overscroll edge glow, Toast chrome and the default
+         Dialog background behind a bottom sheet.
+
+         There used to be only this one style, parented on Material *dark*, and
+         it was applied unconditionally — so in light mode the caret and the
+         selection handles were drawn in Material-dark's pale teal accent on a
+         white card (all but invisible) and the selection toolbar came up with
+         dark-theme text colours. AppThemeLight below is the missing half; each
+         Activity picks between them in onCreate.
+
+         Resource qualifiers (values-night) cannot do this job: the user's
+         in-app theme preference deliberately overrides the system uiMode.
+
+         Colours are the Vega monochrome palette; keep them in step with
+         Theme.kt (Theme.BG / Theme.ACCENT), or the platform's caret and
+         selection handles render in a different accent from the app around
+         them. Every value here is a pure grey or a black/white alpha wash —
+         there is no hue anywhere in this file, and there must not be.
+
+         The header is flat and the same colour as the ground, so statusBarColor
+         equals windowBackground in both styles. -->
+    <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#FF0D0D0D</item>
+        <item name="android:colorAccent">#FFF7F7F7</item>
+        <item name="android:colorControlActivated">#FFF7F7F7</item>
+        <item name="android:colorControlHighlight">#33FFFFFF</item>
+        <item name="android:textColorHighlight">#4DFFFFFF</item>
+        <item name="android:statusBarColor">#FF0D0D0D</item>
+        <item name="android:navigationBarColor">#FF0D0D0D</item>
+    </style>
+
+    <style name="AppThemeLight" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#FFF9F9F9</item>
+        <item name="android:colorAccent">#FF0D0D0D</item>
+        <item name="android:colorControlActivated">#FF0D0D0D</item>
+        <item name="android:colorControlHighlight">#1F000000</item>
+        <item name="android:textColorHighlight">#33000000</item>
+        <item name="android:statusBarColor">#FFF9F9F9</item>
+        <item name="android:navigationBarColor">#FFF9F9F9</item>
+    </style>
+</resources>
