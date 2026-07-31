@@ -1,0 +1,21 @@
+name: پیشنهاد ویژگی
+description: ایده یا قابلیت جدیدی دارید؟
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: مشکلی که این ویژگی حل می‌کند
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: راه‌حل پیشنهادی شما
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: راه‌حل‌های جایگزین که در نظر گرفته‌اید

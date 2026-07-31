@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: گزارش امنیتی
+    url: https://github.com/Vegxz/Vega-Agent/security/advisories/new
+    about: لطفاً آسیب‌پذیری‌ها را اینجا گزارش دهید (عمومی ننویسید)

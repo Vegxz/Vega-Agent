@@ -1,0 +1,54 @@
+name: گزارش باگ
+description: مشکلی در برنامه پیدا کرده‌اید؟
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        قبل از ارسال، لطفاً [Issues](https://github.com/Vegxz/Vega-Agent/issues) را جستجو کنید تا تکراری نباشد.
+  - type: input
+    id: version
+    attributes:
+      label: نسخه Vega Agent
+      placeholder: "مثلاً 1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: نسخه اندروید و مدل دستگاه
+      placeholder: "مثلاً Android 14 – Xiaomi 13"
+    validations:
+      required: true
+  - type: input
+    id: provider
+    attributes:
+      label: ارائه‌دهنده و مدل هوش مصنوعی
+      placeholder: "مثلاً OpenAI – gpt-4o"
+  - type: textarea
+    id: steps
+    attributes:
+      label: مراحل بازتولید مشکل
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: رفتار مورد انتظار
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: رفتار واقعی
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: لاگ یا اسکرین‌شات (بدون کلید API و اطلاعات حساس)
