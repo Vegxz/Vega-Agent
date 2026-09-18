@@ -1,0 +1,7 @@
+Vega Agent is a hand-rolled Android AI agent app with a bilingual (English/Persian) chat interface. It runs an agent loop with real tool use — reading and editing files, fetching web pages, searching the web — all behind an approval system you control.
+
+* Agent chat with streaming responses and run modes (Auto / Accept / Plan)
+* Multi-provider LLM support (OpenAI, Anthropic, Gemini, OpenRouter, Groq, Together, custom endpoints) with a key router for up to 50 API keys
+* Markdown rendering with tables, code cards, and DeepSeek-style serif math/chemistry typography (bundled Latin Modern Math font)
+* Background runs via a foreground service
+* Zero third-party dependencies: Android framework + Kotlin stdlib only. No trackers, no ads, no proprietary SDKs. Your API keys are encrypted in the Android Keystore and never leave the device except to the provider you choose.

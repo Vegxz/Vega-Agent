@@ -1,0 +1,4 @@
+* DeepSeek-style serif math/chemistry typography with the bundled Latin Modern Math font
+* Markdown pipe tables
+* Long-press message panel with whole-message copy
+* Plan-per-chat isolation and resumable heavy downloads

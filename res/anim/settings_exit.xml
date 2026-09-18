@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The chat screen held underneath: eased back very slightly so the incoming
+     sheet has somewhere to sit. It must NOT move far — the chat is still the
+     user's mental anchor. -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:interpolator/accelerate_decelerate">
+    <alpha
+        android:fromAlpha="1.0"
+        android:toAlpha="0.85"
+        android:duration="240" />
+    <scale
+        android:fromXScale="1.0"
+        android:toXScale="0.99"
+        android:fromYScale="1.0"
+        android:toYScale="0.99"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:duration="240" />
+</set>
