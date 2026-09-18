@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings arriving: rises a short distance while fading in.
+     A plain cross-fade gave no sense of a screen ARRIVING, and a full-height
+     slide feels heavy on a phone. A 6%-of-height lift on a decelerating curve
+     reads as a sheet being presented, which is the register ChatGPT and Grok
+     use for a settings screen. -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:interpolator/decelerate_quint">
+    <translate
+        android:fromYDelta="6%p"
+        android:toYDelta="0"
+        android:duration="280" />
+    <alpha
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:duration="200" />
+    <scale
+        android:fromXScale="0.98"
+        android:toXScale="1.0"
+        android:fromYScale="0.98"
+        android:toYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:duration="280" />
+</set>

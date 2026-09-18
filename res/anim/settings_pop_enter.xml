@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Returning to chat: the mirror of settings_exit. -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:interpolator/decelerate_quint">
+    <alpha
+        android:fromAlpha="0.85"
+        android:toAlpha="1.0"
+        android:duration="240" />
+    <scale
+        android:fromXScale="0.99"
+        android:toXScale="1.0"
+        android:fromYScale="0.99"
+        android:toYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:duration="240" />
+</set>

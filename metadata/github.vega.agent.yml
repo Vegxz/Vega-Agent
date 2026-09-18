@@ -1,0 +1,58 @@
+# F-Droid metadata for Vega Agent
+# Place this file at metadata/github.vega.agent.yml in the fdroiddata
+# repository (or in this repo under .fdroid/ for the "repo from source"
+# flow). It describes how F-Droid builds the app entirely from source
+# with no proprietary dependencies.
+#
+# The app is zero-dependency: Android framework + org.json + Kotlin stdlib
+# only. No Google Play Services, no Firebase, no proprietary SDKs.
+# The canonical build is ./mkapk.sh (aapt2 -> kotlinc -> d8 -> zipalign ->
+# apksigner); the Gradle file is an optional IDE convenience over the same
+# flat tree.
+
+Categories:
+  - Internet
+License: AGPL-3.0-only
+AuthorName: Vega
+WebSite: https://github.com/vega-agent/vega-android
+SourceCode: https://github.com/vega-agent/vega-android
+IssueTracker: https://github.com/vega-agent/vega-android/issues
+
+AutoName: Vega Agent
+Summary: On-device AI agent chat with tool use
+Description: |-
+  Vega Agent is a hand-rolled Android AI agent app with a bilingual
+  (English/Persian) chat interface. It runs an agent loop with real tool
+  use — reading and editing files, fetching web pages, searching the web —
+  all behind an approval system you control.
+
+  * Agent chat with streaming responses and run modes (Auto / Accept / Plan)
+  * Multi-provider LLM support (OpenAI, Anthropic, Gemini, OpenRouter, Groq,
+    Together, custom endpoints) with a key router for up to 50 API keys
+  * Markdown rendering with tables, code cards, and DeepSeek-style serif
+    math/chemistry typography (bundled Latin Modern Math font)
+  * Background runs via a foreground service
+  * Zero third-party dependencies: Android framework + Kotlin stdlib only
+
+RepoType: git
+Repo: https://github.com/vega-agent/vega-android
+
+Builds:
+  - versionName: 1.1.0
+    versionCode: 17
+    commit: v1.1.0
+    subdir: .
+    gradle:
+      - yes
+    # Equivalent script build (no Gradle daemon needed):
+    #   ./mkapk.sh 1.1.0 17 Vega-v1.1.0.apk
+    prebuild: |
+      # The tree keeps signing keys out of git by design; F-Droid signs
+      # with its own key, so make sure no key material is present.
+      rm -f keystore/keystore.properties
+      find . -name '*.jks' -o -name '*.keystore' -o -name '*.p12' | xargs -r rm -f
+
+AutoUpdateMode: Version v%v
+UpdateCheckMode: Tags
+CurrentVersion: 1.1.0
+CurrentVersionCode: 17

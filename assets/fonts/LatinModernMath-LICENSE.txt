@@ -1,0 +1,27 @@
+Latin Modern Math — font license notice
+==========================================
+
+Font: Latin Modern Math
+Authors: Bogusław Jackowski, Piotr Strzelczyk and Piotr Pianowski
+Version: 1.959 (5 IX 2014)
+File in this directory: LatinModernMath-Regular.otf
+  (upstream file name: latinmodern-math.otf)
+
+License (quoted from the upstream README, CTAN package `lm-math`):
+
+  % Copyright 2012--2014 for the Latin Modern math extensions by B. Jackowski,
+  % P. Strzelczyk and P. Pianowski (on behalf of TeX Users Groups).
+  %
+  % This work can be freely used and distributed under
+  % the GUST Font License (GFL -- see GUST-FONT-LICENSE.txt)
+  % which is actually an instance of the LaTeX Project Public License
+  % (LPPL -- see http://www.latex-project.org/lppl.txt).
+  %
+  % This work has the maintenance status "maintained". The Current Maintainer
+  % of this work is Bogusław Jackowski, Piotr Strzelczyk and Piotr Pianowski.
+  %
+  % This work consists of the files listed
+  % in the MANIFEST-Latin-Modern-Math.txt file.
+
+Source: https://ctan.org/pkg/lm-math
+Full license text: http://www.latex-project.org/lppl.txt

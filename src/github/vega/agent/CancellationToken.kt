@@ -1,0 +1,151 @@
+package github.vega.agent
+
+import java.net.HttpURLConnection
+import java.util.concurrent.atomic.AtomicBoolean
+
+/**
+ * Cooperative + active cancellation shared by the service, model client and tools.
+ * Listeners are run exactly once and may disconnect sockets or interrupt waits.
+ */
+class CancellationToken {
+
+    /** Handle returned by [onCancel]; closing it deregisters the listener. */
+    fun interface Registration {
+        fun close()
+    }
+
+    class CancelledException : Exception("cancelled by user") {
+        companion object {
+            private const val serialVersionUID = 1L
+        }
+    }
+
+    private val cancelled = AtomicBoolean(false)
+
+    /** java.lang.Object (not Any) so wait/notifyAll are available. */
+    private val lock = java.lang.Object()
+    private val listeners = mutableListOf<Runnable>()
+
+    val isCancelled: Boolean
+        get() = cancelled.get()
+
+    fun cancel(): Boolean {
+        if (!cancelled.compareAndSet(false, true)) {
+            return false
+        }
+        val pending: List<Runnable>
+        synchronized(lock) {
+            pending = listeners.toList()
+            listeners.clear()
+            lock.notifyAll()
+        }
+        // ONE thread for all listeners, not one per listener: the old fan-out
+        // burst a thread per watcher on every cancel. They still run exactly
+        // once each, off the cancelling thread, with failures swallowed.
+        if (pending.isNotEmpty()) {
+            val cleanup = Thread({
+                for (listener in pending) {
+                    runQuietly(listener)
+                }
+            }, "vega-cancel-cleanup")
+            cleanup.isDaemon = true
+            cleanup.start()
+        }
+        return true
+    }
+
+    @Throws(CancelledException::class)
+    fun throwIfCancelled() {
+        if (isCancelled) {
+            throw CancelledException()
+        }
+    }
+
+    /** Registers an action and runs it immediately if cancellation already won. */
+    fun onCancel(listener: Runnable?): Registration {
+        if (listener == null) {
+            return Registration { }
+        }
+        var runNow = false
+        synchronized(lock) {
+            if (cancelled.get()) {
+                runNow = true
+            } else {
+                listeners.add(listener)
+            }
+        }
+        if (runNow) {
+            runAsync(listener)
+        }
+        val closed = AtomicBoolean(false)
+        return Registration {
+            if (closed.compareAndSet(false, true)) {
+                synchronized(lock) {
+                    listeners.remove(listener)
+                }
+            }
+        }
+    }
+
+    /**
+     * Makes a HttpURLConnection actively cancellable. Disconnecting and
+     * interrupting its owner unblocks DNS/connect/getResponseCode/readLine on
+     * Android implementations much sooner than waiting for the read timeout.
+     */
+    fun watchConnection(connection: HttpURLConnection): Registration {
+        val owner = Thread.currentThread()
+        return onCancel {
+            try {
+                connection.disconnect()
+            } catch (ignored: Exception) {
+            }
+            try {
+                owner.interrupt()
+            } catch (ignored: Exception) {
+            }
+        }
+    }
+
+    /** Cancellable replacement for Thread.sleep. Returns false when cancelled. */
+    fun sleep(milliseconds: Long): Boolean {
+        if (milliseconds <= 0) {
+            return !isCancelled
+        }
+        val deadline = System.currentTimeMillis() + milliseconds
+        synchronized(lock) {
+            while (!cancelled.get()) {
+                val remaining = deadline - System.currentTimeMillis()
+                if (remaining <= 0) {
+                    return true
+                }
+                try {
+                    lock.wait(minOf(remaining, 1000L))
+                } catch (e: InterruptedException) {
+                    // Never swallow the interrupt: restore the flag so the
+                    // caller's own interruption handling still sees it, and
+                    // treat the interrupt as a stop request even when the
+                    // token was not the one that cancelled — an interrupted
+                    // thread should not go back to sleeping.
+                    Thread.currentThread().interrupt()
+                    return false
+                }
+            }
+        }
+        return false
+    }
+
+    private companion object {
+        fun runAsync(listener: Runnable) {
+            val cleanup = Thread({ runQuietly(listener) }, "vega-cancel-cleanup")
+            cleanup.isDaemon = true
+            cleanup.start()
+        }
+
+        fun runQuietly(listener: Runnable) {
+            try {
+                listener.run()
+            } catch (ignored: Throwable) {
+            }
+        }
+    }
+}

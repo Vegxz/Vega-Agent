@@ -37,15 +37,13 @@ encouraged by the resulting cooperation.  However, in the case of
 software used on network servers, this result may fail to come about.
 The GNU General Public License permits making a modified version and
 letting the public access it on a server without ever releasing its
-source code to the public.
-
-  The GNU Affero General Public License is designed specifically to
-ensure that, in such cases, the modified source code becomes available
-to the community.  It requires the operator of a network server to
-provide the source code of the modified version running there to the
-users of that server.  Therefore, public use of a modified version, on
-a publicly accessible server, gives the public access to the source
-code of the modified version.
+source code to the public.  The GNU Affero General Public License is
+designed specifically to ensure that, in such cases, the modified
+source code becomes available to the community.  It requires the
+operator of a network server to provide the source code of the modified
+version running there to the users of that server.  Therefore, public
+use of a modified version, on a publicly accessible server, gives the
+public access to the source code of the modified version.
 
   An older license, called the Affero General Public License and
 published by Affero, was designed to accomplish similar goals.  This is
@@ -555,8 +553,8 @@ permission to link or combine any covered work with a work licensed
 under version 3 of the GNU General Public License into a single
 combined work, and to convey the resulting work.  The terms of this
 License will continue to apply to the part which is the covered work,
-but the work with which it is combined will remain governed by version
-3 of the GNU General Public License.
+but the work under the GNU General Public License will remain governed
+simply by the GNU General Public License.
 
   14. Revised Versions of this License.
 
